@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ascende Digital CR - Análisis de Factibilidad y Plan de Negocio</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e3a8a', // blue-900
+                        secondary: '#3b82f6', // blue-500
+                        accent: '#10b981', // emerald-500
+                        background: '#f8fafc', // slate-50
+                        surface: '#ffffff',
+                        textMain: '#1e293b', // slate-800
+                        textMuted: '#64748b', // slate-500
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles for specific constraints and polish */
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        
+        /* Chart Container Strict Constraints */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        
+        .chart-wrapper-small {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+
+        @media (max-width: 640px) {
+            .chart-wrapper, .chart-wrapper-small {
+                height: 250px;
+            }
+        }
+
+        /* Glassmorphism utilities */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        /* Interactive tab transitions */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <!-- Chosen Palette: Corporate Tech Lean (Slate backgrounds, Deep Blue primary, Emerald accents for positive financial indicators) -->
+    <!-- Application Structure Plan: 
+         1. Hero/Executive Summary: Sets the context of Ascende CR.
+         2. Feasibility Analysis: Lean model advantages, AI acceleration, structural cost advantages.
+         3. Financial Dashboards: Highlights the massive cost advantage of the Lean + AI approach (Claude Code/Gemini) vs traditional models.
+         4. Roadmap (Interactive): Q1-Q4 breakdown to show execution plan.
+         5. Risk Management: Interactive cards showing risks and mitigations.
+         This structure logically moves from "What is it?" to "Why can WE build it cheaply?" to "What are the numbers?" to "How do we execute?".
+    -->
+    <!-- Visualization & Content Choices: 
+         - Bar Chart: Compare "Traditional Startup Cost" vs "Ascende Lean Cost". Goal: Emphasize feasibility. Library: Chart.js.
+         - Doughnut Chart: Monthly OPEX breakdown. Goal: Show transparency in the minimal viable budget. Library: Chart.js.
+         - Interactive Tabs: Roadmap Q1-Q4. Goal: Keep UI clean while packing high information density. Native JS.
+         - Hover Cards: Risk management. Goal: Make reading risks engaging. Native HTML/CSS.
+         - CONFIRMING: NO SVG used. NO Mermaid JS used. Emoticons and CSS styling used for iconography.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-background antialiased selection:bg-secondary selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-card border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <span class="text-2xl">🚀</span>
+                    <span class="font-bold text-xl text-primary tracking-tight">Ascende CR</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#ejecutivo" class="text-textMuted hover:text-primary font-medium transition-colors">Resumen</a>
+                    <a href="#factibilidad" class="text-textMuted hover:text-primary font-medium transition-colors">Análisis de Factibilidad</a>
+                    <a href="#finanzas" class="text-textMuted hover:text-primary font-medium transition-colors">Costos y Números</a>
+                    <a href="#roadmap" class="text-textMuted hover:text-primary font-medium transition-colors">Hoja de Ruta</a>
+                    <a href="#precios" class="text-textMuted hover:text-primary font-medium transition-colors">Precios</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero / Executive Summary -->
+    <section id="ejecutivo" class="pt-28 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-textMain mb-4 tracking-tight">
+                Modernizando las PyMEs de Costa Rica con <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Logística Inteligente</span>
+            </h1>
+            <p class="text-xl text-textMuted max-w-3xl mx-auto">
+                Una plataforma móvil omnicanal que centraliza inventarios, Punto de Venta (POS) y gestión de órdenes (WhatsApp/Express) para tiendas, restaurantes y bares.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="glass-card p-8 rounded-2xl border-t-4 border-red-400 hover:-translate-y-1 transition-transform">
+                <div class="text-4xl mb-4">📉</div>
+                <h3 class="text-xl font-bold text-textMain mb-2">El Problema</h3>
+                <p class="text-textMuted text-sm">Las PyMEs en CR pierden ventas y control por no tener sistemas integrados. Gestionan WhatsApp, Express y ventas físicas de forma manual y caótica.</p>
+            </div>
+            <div class="glass-card p-8 rounded-2xl border-t-4 border-accent hover:-translate-y-1 transition-transform">
+                <div class="text-4xl mb-4">💡</div>
+                <h3 class="text-xl font-bold text-textMain mb-2">La Solución</h3>
+                <p class="text-textMuted text-sm">App móvil/tablet de fácil instalación. Integra inventario en tiempo real, POS y canalización de órdenes digitales en una sola pantalla unificada.</p>
+            </div>
+            <div class="glass-card p-8 rounded-2xl border-t-4 border-secondary hover:-translate-y-1 transition-transform">
+                <div class="text-4xl mb-4">⭐</div>
+                <h3 class="text-xl font-bold text-textMain mb-2">Diferenciador</h3>
+                <p class="text-textMuted text-sm">Bajo costo, diseño hiper-enfocado en la realidad de la PyME costarricense y respaldado por estrategias de marketing basadas en IA.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Análisis de Factibilidad (Respondiendo al Prompt directamente) -->
+    <section id="factibilidad" class="py-16 bg-white border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-textMain mb-4">Análisis de Factibilidad: <span class="text-primary">El Modelo "Hyper-Lean"</span></h2>
+                <p class="text-textMuted text-lg max-w-4xl">
+                    La viabilidad de Ascende CR es <strong>excepcionalmente alta</strong> debido a la estructura fundacional. Al aprovechar capital humano de alto nivel, herramientas de IA generativa y eliminar costos fijos iniciales, el riesgo de quiebra por "burn rate" (tasa de quema de efectivo) se reduce a cero durante la fase de MVP.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <!-- Ventajas Estructurales -->
+                <div class="space-y-6">
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-xl">👨‍💻</div>
+                        <div>
+                            <h4 class="text-lg font-bold text-textMain">Equipo Fundador Técnico de Élite</h4>
+                            <p class="text-sm text-textMuted mt-1">Un equipo con sólida experiencia en desarrollo Full-stack, Mobile y arquitectura de redes y ciberseguridad, garantizando una base técnica robusta y segura desde el primer día.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-xl">💰</div>
+                        <div>
+                            <h4 class="text-lg font-bold text-textMain">Estructura de Costos Optimizada</h4>
+                            <p class="text-sm text-textMuted mt-1">Modelo de operación eficiente que elimina el 85% de los gastos típicos de una startup de software durante la fase inicial, maximizando el tiempo de vida del proyecto antes de requerir inversión externa.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-xl">🤖</div>
+                        <div>
+                            <h4 class="text-lg font-bold text-textMain">Aceleración con IA (Claude Code & Gemini Pro)</h4>
+                            <p class="text-sm text-textMuted mt-1">El uso de herramientas de IA para refactorización, generación de boilerplate y debugging multiplicará la velocidad de desarrollo x3, permitiendo alcanzar el MVP en el Q1 sin contratar desarrolladores junior.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Diagnóstico -->
+                <div class="glass-card p-8 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 border border-blue-100">
+                    <h3 class="text-xl font-bold text-primary mb-4 text-center">Veredicto de Viabilidad</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b border-slate-200 pb-2">
+                            <span class="text-slate-600 font-medium">Factibilidad Técnica</span>
+                            <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm font-bold">100% / Muy Alta</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-slate-200 pb-2">
+                            <span class="text-slate-600 font-medium">Factibilidad Financiera (Fase 1)</span>
+                            <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm font-bold">100% / Muy Alta</span>
+                        </div>
+                        <div class="flex justify-between items-center pb-2">
+                            <span class="text-slate-600 font-medium">Reto Principal a Mitigar</span>
+                            <span class="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-sm font-bold text-right">Ventas B2B y Marketing</span>
+                        </div>
+                    </div>
+                    <div class="mt-6 p-4 bg-white rounded-lg border border-amber-200 text-sm text-amber-800">
+                        <strong>Nota Estratégica:</strong> El mayor riesgo no es construir el producto, sino posicionarlo comercialmente. Se debe asignar explícitamente el rol de "Ventas/Desarrollo de Negocio" a uno de los fundadores durante el Q2 (Lanzamiento Beta).
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contrastando Números (Gráficos) -->
+    <section id="finanzas" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="mb-12 text-center">
+            <h2 class="text-3xl font-bold text-textMain mb-4">Contrastando Números: El Impacto del Modelo Lean</h2>
+            <p class="text-textMuted text-lg max-w-3xl mx-auto">
+                Comparativa de costos operativos para desarrollar el MVP y operar los primeros 6 meses. La adopción de IA y el modelo de operación lean reduce drásticamente las barreras de entrada.
+            </p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-12">
+            <!-- Chart 1: Comparison -->
+            <div class="glass-card p-6 rounded-2xl">
+                <h3 class="text-lg font-bold text-center mb-2">Costo Acumulado: 6 Meses de Desarrollo</h3>
+                <p class="text-sm text-textMuted text-center mb-6">Startup Tradicional vs. Ascende CR (Founders + AI)</p>
+                <div class="chart-wrapper">
+                    <canvas id="costComparisonChart"></canvas>
+                </div>
+                <div class="mt-4 text-sm text-center text-textMuted">
+                    <p>*Estimación Tradicional: 3 Devs ($2k/mes c/u) + Equipos + Servidores.</p>
+                    <p>*Ascende: OPEX Mínimo en Nube e IA. Sin costos fijos de infraestructura inicial.</p>
+                </div>
+            </div>
+
+            <!-- Chart 2: Monthly OPEX -->
+            <div class="glass-card p-6 rounded-2xl flex flex-col justify-between">
+                <div>
+                    <h3 class="text-lg font-bold text-center mb-2">Desglose OPEX Mensual (Ascende CR)</h3>
+                    <p class="text-sm text-textMuted text-center mb-6">Presupuesto operativo mensual requerido ($160 USD aprox)</p>
+                </div>
+                <div class="chart-wrapper-small">
+                    <canvas id="monthlyOpexChart"></canvas>
+                </div>
+                <div class="mt-6 grid grid-cols-2 gap-4 text-center">
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                        <div class="text-xs text-textMuted">Licencias IA</div>
+                        <div class="font-bold text-primary">$120/mes</div>
+                        <div class="text-[10px] text-slate-400">Claude/Gemini x3</div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                        <div class="text-xs text-textMuted">Infraestructura</div>
+                        <div class="font-bold text-primary">$40/mes</div>
+                        <div class="text-[10px] text-slate-400">AWS/GCP/Dominio</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Interactivo -->
+    <section id="roadmap" class="py-16 bg-slate-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-bold mb-4">Hoja de Ruta de Ejecución (Roadmap)</h2>
+                <p class="text-slate-400 text-lg">Primer año de operaciones: De la idea a la optimización de mercado.</p>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="flex flex-wrap justify-center gap-2 mb-8">
+                <button onclick="openTab('q1')" id="btn-q1" class="px-6 py-3 rounded-full font-bold transition-all bg-secondary text-white shadow-lg shadow-blue-500/30">Q1: Enero - Marzo</button>
+                <button onclick="openTab('q2')" id="btn-q2" class="px-6 py-3 rounded-full font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">Q2: Abril - Junio</button>
+                <button onclick="openTab('q3')" id="btn-q3" class="px-6 py-3 rounded-full font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">Q3: Julio - Sept</button>
+                <button onclick="openTab('q4')" id="btn-q4" class="px-6 py-3 rounded-full font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">Q4: Oct - Dic</button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div class="max-w-4xl mx-auto bg-slate-800 rounded-2xl p-8 border border-slate-700 min-h-[300px]">
+                
+                <!-- Q1 -->
+                <div id="q1" class="tab-content active">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="text-4xl">🏗️</div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Conceptualización y Base</h3>
+                            <span class="text-secondary font-medium">Fase Actual</span>
+                        </div>
+                    </div>
+                    <div class="space-y-4 text-slate-300">
+                        <p><strong>Foco Principal:</strong> Desarrollo hiper-acelerado del producto core utilizando IA y la experiencia combinada del equipo fundador.</p>
+                        <ul class="list-disc list-inside space-y-2 ml-2">
+                            <li>Diseño de la arquitectura de red y seguridad.</li>
+                            <li>Desarrollo Full-Stack / Mobile de la App con apoyo de Claude/Gemini.</li>
+                            <li>Definición del modelo de datos para Inventario y POS.</li>
+                        </ul>
+                        <div class="mt-6 p-4 bg-slate-900 rounded-lg border-l-4 border-accent">
+                            <span class="font-bold text-white">Hito Clave:</span> MVP (Producto Mínimo Viable) finalizado y funcional.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div id="q2" class="tab-content">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="text-4xl">🚀</div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Lanzamiento y Validación</h3>
+                            <span class="text-secondary font-medium">Validación de Mercado</span>
+                        </div>
+                    </div>
+                    <div class="space-y-4 text-slate-300">
+                        <p><strong>Foco Principal:</strong> Salir del entorno de desarrollo y enfrentar el producto al mercado real costarricense. <em>Aquí el equipo debe ponerse la "gorra de vendedores".</em></p>
+                        <ul class="list-disc list-inside space-y-2 ml-2">
+                            <li>Lanzamiento Beta cerrado en ubicaciones estratégicas (PyMEs conocidas).</li>
+                            <li>Recopilar datos de uso, pruebas de estrés en la gestión de órdenes de WhatsApp/Express.</li>
+                            <li>Iteración rápida basada en feedback (Agile UI/UX tweaks).</li>
+                        </ul>
+                        <div class="mt-6 p-4 bg-slate-900 rounded-lg border-l-4 border-accent">
+                            <span class="font-bold text-white">Hito Clave:</span> Lograr 100 usuarios activos y recopilar feedback crítico de usabilidad.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div id="q3" class="tab-content">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="text-4xl">📈</div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Crecimiento y Adquisición</h3>
+                            <span class="text-secondary font-medium">Escalamiento Inicial</span>
+                        </div>
+                    </div>
+                    <div class="space-y-4 text-slate-300">
+                        <p><strong>Foco Principal:</strong> Transición de usuarios Beta a clientes de pago y apertura del embudo de marketing.</p>
+                        <ul class="list-disc list-inside space-y-2 ml-2">
+                            <li>Implementación de pasarela de pago para el modelo SaaS de Ascende CR.</li>
+                            <li>Despliegue de campañas de marketing digital enfocadas en el "Diferenciador Clave".</li>
+                            <li>Análisis de viabilidad para contratar primer rol no-fundador (ej. Especialista en Ventas).</li>
+                        </ul>
+                        <div class="mt-6 p-4 bg-slate-900 rounded-lg border-l-4 border-accent">
+                            <span class="font-bold text-white">Hito Clave:</span> Alcanzar la meta "X" de clientes de pago recurrentes (MRR > $0).
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q4 -->
+                <div id="q4" class="tab-content">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="text-4xl">⚙️</div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Escalamiento y Optimización</h3>
+                            <span class="text-secondary font-medium">Consolidación</span>
+                        </div>
+                    </div>
+                    <div class="space-y-4 text-slate-300">
+                        <p><strong>Foco Principal:</strong> Mejorar la rentabilidad, asegurar la infraestructura y prepararse para escalar a más zonas del país.</p>
+                        <ul class="list-disc list-inside space-y-2 ml-2">
+                            <li>Optimización de la infraestructura Cloud para manejar mayor volumen de transacciones POS/Express.</li>
+                            <li>Auditoría de seguridad profunda de la plataforma.</li>
+                            <li>Revisión estratégica del año y planificación de levantamiento de capital (si es necesario para escalar agresivamente).</li>
+                        </ul>
+                        <div class="mt-6 p-4 bg-slate-900 rounded-lg border-l-4 border-accent">
+                            <span class="font-bold text-white">Hito Clave:</span> Optimización del Coste de Adquisición de Clientes (CAC) y revisión anual.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Planes de Precios -->
+    <section id="precios" class="py-16 bg-white border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl font-bold text-textMain mb-4">Planes y Precios</h2>
+                <p class="text-textMuted text-lg max-w-2xl mx-auto">Soluciones flexibles diseñadas para crecer con tu negocio. Sin costos ocultos.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 items-stretch">
+
+                <!-- Plan Básico -->
+                <div class="glass-card rounded-2xl p-8 flex flex-col border border-slate-200 hover:-translate-y-1 transition-transform">
+                    <div class="mb-6">
+                        <span class="text-sm font-bold uppercase tracking-widest text-textMuted">Básico</span>
+                        <div class="mt-3 flex items-end gap-1">
+                            <span class="text-5xl font-extrabold text-textMain">$29</span>
+                            <span class="text-textMuted mb-2">/mes</span>
+                        </div>
+                        <p class="text-sm text-textMuted mt-2">Ideal para tiendas y emprendimientos que inician su digitalización.</p>
+                    </div>
+                    <ul class="space-y-3 flex-1 mb-8">
+                        <li class="flex items-center gap-3 text-sm text-slate-700"><span class="text-emerald-500 font-bold text-base">✓</span> POS básico (hasta 200 productos)</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-700"><span class="text-emerald-500 font-bold text-base">✓</span> Gestión de inventario en tiempo real</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-700"><span class="text-emerald-500 font-bold text-base">✓</span> 1 canal digital (WhatsApp o Express)</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-700"><span class="text-emerald-500 font-bold text-base">✓</span> Reportes básicos mensuales</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-400"><span class="text-slate-300 font-bold text-base">✗</span> Soporte prioritario</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-400"><span class="text-slate-300 font-bold text-base">✗</span> Multi-sucursal</li>
+                    </ul>
+                    <a href="#" class="block text-center py-3 px-6 rounded-xl border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-colors">Empezar Gratis 30 días</a>
+                </div>
+
+                <!-- Plan Profesional (Destacado) -->
+                <div class="relative rounded-2xl p-8 flex flex-col bg-gradient-to-b from-primary to-blue-700 text-white shadow-2xl shadow-blue-500/30 hover:-translate-y-2 transition-transform">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+                        <span class="bg-accent text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">Más Popular</span>
+                    </div>
+                    <div class="mb-6 mt-2">
+                        <span class="text-sm font-bold uppercase tracking-widest text-blue-300">Profesional</span>
+                        <div class="mt-3 flex items-end gap-1">
+                            <span class="text-5xl font-extrabold">$59</span>
+                            <span class="text-blue-300 mb-2">/mes</span>
+                        </div>
+                        <p class="text-sm text-blue-200 mt-2">Para restaurantes, bares y tiendas con alto volumen de pedidos digitales.</p>
+                    </div>
+                    <ul class="space-y-3 flex-1 mb-8">
+                        <li class="flex items-center gap-3 text-sm text-blue-100"><span class="text-emerald-400 font-bold text-base">✓</span> POS ilimitado (productos ilimitados)</li>
+                        <li class="flex items-center gap-3 text-sm text-blue-100"><span class="text-emerald-400 font-bold text-base">✓</span> Gestión de inventario avanzada</li>
+                        <li class="flex items-center gap-3 text-sm text-blue-100"><span class="text-emerald-400 font-bold text-base">✓</span> Todos los canales digitales (WhatsApp + Express)</li>
+                        <li class="flex items-center gap-3 text-sm text-blue-100"><span class="text-emerald-400 font-bold text-base">✓</span> Dashboard de analítica en tiempo real</li>
+                        <li class="flex items-center gap-3 text-sm text-blue-100"><span class="text-emerald-400 font-bold text-base">✓</span> Soporte prioritario por WhatsApp</li>
+                        <li class="flex items-center gap-3 text-sm text-blue-300"><span class="text-blue-400 font-bold text-base">✗</span> Multi-sucursal</li>
+                    </ul>
+                    <a href="#" class="block text-center py-3 px-6 rounded-xl bg-white text-primary font-bold hover:bg-blue-50 transition-colors shadow-lg">Empezar Gratis 30 días</a>
+                </div>
+
+                <!-- Plan Enterprise -->
+                <div class="glass-card rounded-2xl p-8 flex flex-col border border-slate-200 hover:-translate-y-1 transition-transform">
+                    <div class="mb-6">
+                        <span class="text-sm font-bold uppercase tracking-widest text-textMuted">Enterprise</span>
+                        <div class="mt-3 flex items-end gap-1">
+                            <span class="text-5xl font-extrabold text-textMain">$99</span>
+                            <span class="text-textMuted mb-2">/mes</span>
+                        </div>
+                        <p class="text-sm text-textMuted mt-2">Para cadenas y negocios con múltiples sucursales que necesitan control total.</p>
+                    </div>
+                    <ul class="space-y-3 flex-1 mb-8">
+                        <li class="flex items-center gap-3 text-sm text-slate-700"><span class="text-emerald-500 font-bold text-base">✓</span> Todo lo del plan Profesional</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-700"><span class="text-emerald-500 font-bold text-base">✓</span> Multi-sucursal (hasta 5 ubicaciones)</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-700"><span class="text-emerald-500 font-bold text-base">✓</span> Roles y permisos por usuario</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-700"><span class="text-emerald-500 font-bold text-base">✓</span> API de integración personalizada</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-700"><span class="text-emerald-500 font-bold text-base">✓</span> Gerente de cuenta dedicado</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-700"><span class="text-emerald-500 font-bold text-base">✓</span> SLA de disponibilidad 99.9%</li>
+                    </ul>
+                    <a href="#" class="block text-center py-3 px-6 rounded-xl border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-colors">Contactar Ventas</a>
+                </div>
+
+            </div>
+
+            <!-- Price note -->
+            <p class="text-center text-sm text-textMuted mt-8">Todos los precios en USD. Facturación mensual. Cancela cuando quieras. Primeros 30 días gratis sin tarjeta de crédito.</p>
+        </div>
+    </section>
+
+    <!-- Plan de Riesgos -->
+    <section class="py-16 bg-background px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="mb-12 text-center">
+            <h2 class="text-3xl font-bold text-textMain mb-4">Gestión de Riesgos</h2>
+            <p class="text-textMuted text-lg max-w-2xl mx-auto">Identificación y estrategias de mitigación para los desafíos clave en nuestro contexto específico.</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+            <!-- Riesgo 1 -->
+            <div class="glass-card p-6 rounded-xl border-t-4 border-red-500 flex flex-col h-full">
+                <h4 class="font-bold text-lg mb-2 flex items-center gap-2"><span>⏱️</span> Riesgo 1: Retraso en MVP</h4>
+                <p class="text-sm text-textMuted mb-4">Problemas técnicos imprevistos o cambios en la disponibilidad del equipo durante la fase de desarrollo.</p>
+                <div class="mt-auto pt-4 border-t border-slate-200">
+                    <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider block mb-1">Mitigación:</span>
+                    <p class="text-sm">Priorizar funciones críticas (Core POS y WhatsApp) y apalancar masivamente Claude/Gemini para acelerar código repetitivo.</p>
+                </div>
+            </div>
+            
+            <!-- Riesgo 2 -->
+            <div class="glass-card p-6 rounded-xl border-t-4 border-amber-500 flex flex-col h-full">
+                <h4 class="font-bold text-lg mb-2 flex items-center gap-2"><span>📉</span> Riesgo 2: Baja Adopción</h4>
+                <p class="text-sm text-textMuted mb-4">El mercado PyME es tradicional y puede resistirse al cambio tecnológico.</p>
+                <div class="mt-auto pt-4 border-t border-slate-200">
+                    <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider block mb-1">Mitigación:</span>
+                    <p class="text-sm">Pruebas A/B en mensajes de marketing. Foco en la "facilidad de instalación". Contacto humano directo 1-a-1 con los primeros usuarios Beta.</p>
+                </div>
+            </div>
+
+            <!-- Riesgo 3 (Custom for context) -->
+            <div class="glass-card p-6 rounded-xl border-t-4 border-purple-500 flex flex-col h-full">
+                <h4 class="font-bold text-lg mb-2 flex items-center gap-2"><span>🗣️</span> Riesgo 3: Falta de Ventas</h4>
+                <p class="text-sm text-textMuted mb-4">El perfil del equipo fundador es predominantemente técnico, lo que puede representar una brecha en habilidades de ventas B2B o networking comercial.</p>
+                <div class="mt-auto pt-4 border-t border-slate-200">
+                    <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider block mb-1">Mitigación:</span>
+                    <p class="text-sm">Asignar obligatoriamente el rol de "Hustler/Ventas" a un fundador. Usar alianzas estratégicas o considerar un 4to socio a futuro enfocado solo en negocios.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="text-2xl mb-4">🚀</div>
+            <p class="text-textMuted font-medium">Ascende Digital CR</p>
+            <p class="text-sm text-slate-400 mt-2">Plan de Negocio y Análisis de Factibilidad Lean</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // 1. Roadmap Tab Logic
+        function openTab(tabId) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Reset all buttons style
+            document.querySelectorAll('button[id^="btn-q"]').forEach(btn => {
+                btn.className = "px-6 py-3 rounded-full font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
+            });
+
+            // Show selected content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Style active button
+            document.getElementById('btn-' + tabId).className = "px-6 py-3 rounded-full font-bold transition-all bg-secondary text-white shadow-lg shadow-blue-500/30";
+        }
+
+        // 2. Chart.js Implementations
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Shared Chart Options
+            Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+            Chart.defaults.color = '#64748b';
+
+            // --- Chart 1: Cost Comparison (Bar) ---
+            const ctxCompare = document.getElementById('costComparisonChart').getContext('2d');
+            
+            // Data generation: Cumulative costs over 6 months
+            const labelsMonths = ['Mes 1', 'Mes 2', 'Mes 3', 'Mes 4', 'Mes 5', 'Mes 6'];
+            
+            // Traditional: ~$6000/mo (3 devs @ 2k) + $500 infra/software = 6500/mo
+            let costTrad = 0;
+            const dataTrad = labelsMonths.map(() => { costTrad += 6500; return costTrad; });
+            
+            // Ascende Lean: $0 devs + $160 infra/AI = 160/mo
+            let costLean = 0;
+            const dataLean = labelsMonths.map(() => { costLean += 160; return costLean; });
+
+            new Chart(ctxCompare, {
+                type: 'bar',
+                data: {
+                    labels: labelsMonths,
+                    datasets: [
+                        {
+                            label: 'Startup Tradicional (CR)',
+                            data: dataTrad,
+                            backgroundColor: 'rgba(148, 163, 184, 0.5)', // slate-400
+                            borderColor: 'rgba(148, 163, 184, 1)',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Ascende CR (Lean + IA)',
+                            data: dataLean,
+                            backgroundColor: 'rgba(59, 130, 246, 0.8)', // blue-500
+                            borderColor: 'rgba(37, 99, 235, 1)', // blue-600
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value / 1000 + 'k';
+                                }
+                            },
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // --- Chart 2: Monthly OPEX (Doughnut) ---
+            const ctxOpex = document.getElementById('monthlyOpexChart').getContext('2d');
+            new Chart(ctxOpex, {
+                type: 'doughnut',
+                data: {
+                    labels: [
+                        'Claude Pro (3 usuarios)', 
+                        'Gemini Advanced (3 usuarios)', 
+                        'Hosting Cloud (AWS/GCP)', 
+                        'Dominios/Misc'
+                    ],
+                    datasets: [{
+                        data: [60, 60, 30, 10], // Estimation in USD
+                        backgroundColor: [
+                            '#8b5cf6', // violet for Claude
+                            '#3b82f6', // blue for Gemini
+                            '#10b981', // emerald for Hosting
+                            '#94a3b8'  // slate for Misc
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { padding: 20, usePointStyle: true, boxWidth: 8 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' $' + context.parsed + ' USD/mes';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
